@@ -2,13 +2,50 @@ package com.TenantAndProperties.mapper;
 
 import com.TenantAndProperties.dto.PropertyDTO;
 import com.TenantAndProperties.model.Property;
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
+import com.TenantAndProperties.model.Tenant;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring", uses = {TenantMapper.class})
-public interface PropertyMapper {
-    PropertyMapper INSTANCE = Mappers.getMapper(PropertyMapper.class);
+import java.util.stream.Collectors;
 
-    Property dtoToEntity(PropertyDTO propertyDTO);
-    PropertyDTO entityToDto(Property property);
+@Component
+@RequiredArgsConstructor
+public class PropertyMapper {
+    private final TenantMapper tenantMapper;
+
+    public Property propertyDtoToProperty(PropertyDTO propertyDTO) {
+
+        Property property = Property.builder()
+                .id(propertyDTO.getId())
+                .address(propertyDTO.getAddress())
+                .rentAmount(propertyDTO.getRentAmount())
+                .build();
+
+        if (propertyDTO.getTenants() != null) {
+            property.setTenants(propertyDTO.getTenants().stream()
+                    .map(tenantDTO -> {
+                        Tenant tenant = Tenant.builder()
+                                .id(tenantDTO.getId())
+                                .name(tenantDTO.getName())
+                                .property(property)
+                                .build();
+                        return tenant;
+                    })
+                    .collect(Collectors.toList()));
+        }
+        return property;
+    }
+
+    public PropertyDTO propertyToPropertyDto(Property property) {
+        return PropertyDTO.builder()
+                .id(property.getId())
+                .address(property.getAddress())
+                .rentAmount(property.getRentAmount())
+                .tenants(property.getTenants() != null ?
+                        property.getTenants().stream()
+                                .map(tenantMapper::tenantToTenantDto)
+                                .collect(Collectors.toList())
+                        : null)
+                .build();
+    }
 }

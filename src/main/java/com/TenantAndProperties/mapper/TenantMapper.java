@@ -1,18 +1,48 @@
 package com.TenantAndProperties.mapper;
 
+import com.TenantAndProperties.dto.PropertyDTO;
 import com.TenantAndProperties.dto.TenantDTO;
+import com.TenantAndProperties.model.Property;
 import com.TenantAndProperties.model.Tenant;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface TenantMapper {
-    TenantMapper INSTANCE = Mappers.getMapper(TenantMapper.class);
+@Component
+@RequiredArgsConstructor
+public class TenantMapper {
 
-    @Mapping(target = "property", ignore = true)
-    Tenant dtoToEntity(TenantDTO tenantDTO);
+    public Tenant tenantDtoToTenant(TenantDTO tenantDTO) {
+        Tenant tenant = Tenant.builder()
+                .id(tenantDTO.getId())
+                .name(tenantDTO.getName())
+                .build();
+        if (tenantDTO.getProperty() != null) {
+            Property property = Property.builder()
+                    .id(tenantDTO.getProperty().getId())
+                    .address(tenantDTO.getProperty().getAddress())
+                    .rentAmount(tenantDTO.getProperty().getRentAmount())
+                    .build();
+            tenant.setProperty(property);
+        }
 
-    @Mapping(target = "property", ignore = true)
-    TenantDTO entityToDto(Tenant tenant);
+        return tenant;
+    }
+
+    public TenantDTO tenantToTenantDto(Tenant tenant) {
+
+        TenantDTO tenantDTO = TenantDTO.builder()
+                .id(tenant.getId())
+                .name(tenant.getName())
+                .build();
+        if (tenant.getProperty() != null) {
+            PropertyDTO propertyDTO = PropertyDTO.builder()
+                    .id(tenant.getProperty().getId())
+                    .address(tenant.getProperty().getAddress())
+                    .rentAmount(tenant.getProperty().getRentAmount())
+                    .build();
+            tenantDTO.setProperty(propertyDTO);
+        }
+
+        return tenantDTO;
+    }
 }
