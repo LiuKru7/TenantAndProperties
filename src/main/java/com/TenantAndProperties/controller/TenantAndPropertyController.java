@@ -27,23 +27,25 @@ public class TenantAndPropertyController {
 
     @PostMapping("/tenant/{propertyId}")
     public ResponseEntity<TenantDTO> addTenant(
-            @PathVariable Long propertyId, @Valid @RequestBody TenantDTO tenantDTO){
+            @PathVariable Long propertyId, @Valid @RequestBody TenantDTO tenantDTO) {
         final TenantDTO tenant = service.addTenant(propertyId, tenantDTO);
         return new ResponseEntity<>(tenant, HttpStatus.OK);
     }
+
     @GetMapping("/property")
-    public ResponseEntity<List<PropertyDTO>> getAllProperties(){
+    public ResponseEntity<List<PropertyDTO>> getAllProperties() {
         final List<PropertyDTO> propertyDTOS = service.getAllProperties();
         return new ResponseEntity<>(propertyDTOS, HttpStatus.OK);
     }
+
     @GetMapping("/tenant")
-    public ResponseEntity<List<TenantDTO>> getAllTenants(){
+    public ResponseEntity<List<TenantDTO>> getAllTenants() {
         final List<TenantDTO> tenantDTOS = service.getAllTenants();
         return new ResponseEntity<>(tenantDTOS, HttpStatus.OK);
     }
 
     @DeleteMapping("/tenant/{id}")
-    public ResponseEntity<?> deleteTenant(@PathVariable Long id){
+    public ResponseEntity<?> deleteTenant(@PathVariable Long id) {
         service.deleteTenant(id);
         return new ResponseEntity<>("Deleted successfully id: " + id, HttpStatus.OK);
     }
@@ -51,19 +53,21 @@ public class TenantAndPropertyController {
     @DeleteMapping("/property/{id}")
     public ResponseEntity<?> deleteProperty(@PathVariable Long id) {
         service.deleteProperty(id);
-        return new ResponseEntity<>("Deleted successfully id: " + id,HttpStatus.OK);
+        return new ResponseEntity<>("Deleted successfully id: " + id, HttpStatus.OK);
     }
+
     @PutMapping("/property/{id}")
     public ResponseEntity<?> updateProperty(
-            @PathVariable Long id, @Valid @RequestBody PropertyDTO propertyDTO){
+            @PathVariable Long id, @Valid @RequestBody PropertyDTO propertyDTO) {
         PropertyDTO property = service.updateProperty(propertyDTO, id);
-        return new ResponseEntity<>(property,HttpStatus.OK);
+        return new ResponseEntity<>(property, HttpStatus.OK);
     }
+
     @PutMapping("/tenant/{id}")
     public ResponseEntity<?> updateTenant(
             @PathVariable Long id, @Valid @RequestBody TenantDTO tenantDTO) {
-        TenantDTO tenant = service.updateTenant(tenantDTO,id);
-        return new ResponseEntity<>(tenant,HttpStatus.OK);
+        TenantDTO tenant = service.updateTenant(tenantDTO, id);
+        return new ResponseEntity<>(tenant, HttpStatus.OK);
 
     }
 
