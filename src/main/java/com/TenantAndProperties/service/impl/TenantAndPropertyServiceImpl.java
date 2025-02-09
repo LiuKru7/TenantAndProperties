@@ -1,5 +1,6 @@
 package com.TenantAndProperties.service.impl;
 
+import com.TenantAndProperties.TenantNotFoundException;
 import com.TenantAndProperties.dto.PropertyDTO;
 import com.TenantAndProperties.dto.TenantDTO;
 import com.TenantAndProperties.mapper.PropertyMapper;
@@ -10,6 +11,8 @@ import com.TenantAndProperties.repository.PropertyRepository;
 import com.TenantAndProperties.repository.TenantRepository;
 import com.TenantAndProperties.service.TenantAndPropertyService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +20,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TenantAndPropertyServiceImpl implements TenantAndPropertyService {
     private final PropertyRepository propertyRepository;
     private final TenantRepository tenantRepository;
@@ -61,5 +65,22 @@ public class TenantAndPropertyServiceImpl implements TenantAndPropertyService {
                 .map(tenantMapper::tenantToTenantDto)
                 .toList();
     }
+
+    @Override
+    public void deleteTenant(Long id) {
+        if (!tenantRepository.existsById(id))
+            throw new TenantNotFoundException("Tenant was not found!");
+        tenantRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteProperty(Long id) {
+        try {
+            propertyRepository.deleteById(id);
+        } catch (final EmptyResultDataAccessException emptyResultDataAccessException) {
+            log.debug("Attempted non-existing property", emptyResultDataAccessException);
+        }
+    }
+
 
 }

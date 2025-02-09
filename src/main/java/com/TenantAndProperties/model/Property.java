@@ -20,14 +20,10 @@ public class Property {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(unique = true)
     private String address;
-
-
     private Double rentAmount;
-
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = false)
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Tenant> tenants = new ArrayList<>();
 

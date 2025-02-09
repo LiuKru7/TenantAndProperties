@@ -2,10 +2,6 @@ package com.TenantAndProperties.service;
 
 import com.TenantAndProperties.dto.PropertyDTO;
 import com.TenantAndProperties.dto.TenantDTO;
-import com.TenantAndProperties.repository.PropertyRepository;
-import com.TenantAndProperties.repository.TenantRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -20,4 +16,8 @@ public interface TenantAndPropertyService {
     List<PropertyDTO> getAllProperties();
 
     List<TenantDTO> getAllTenants();
+
+    void deleteTenant(Long id);
+
+    void deleteProperty(Long id);
 }

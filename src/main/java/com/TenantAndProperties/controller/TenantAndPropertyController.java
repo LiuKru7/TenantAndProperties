@@ -39,6 +39,19 @@ public class TenantAndPropertyController {
         return new ResponseEntity<>(tenantDTOS, HttpStatus.OK);
     }
 
+    @DeleteMapping("/tenant/{id}")
+    public ResponseEntity<String> deleteTenant(@PathVariable Long id){
+        service.deleteTenant(id);
+        return new ResponseEntity<>("Deleted successfully id: " + id, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/property/{id}")
+    public ResponseEntity<String> deleteProperty(@PathVariable Long id) {
+        service.deleteProperty(id);
+        return new ResponseEntity<>("Deleted successfully id: " + id,HttpStatus.OK);
+    }
+
+
 
 
 

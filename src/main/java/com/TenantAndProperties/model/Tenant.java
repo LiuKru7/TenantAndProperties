@@ -17,12 +17,11 @@ public class Tenant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @NotEmpty
     private String name;
-
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JsonBackReference
+    @JoinColumn(name="property_id")
     private Property property;
 
 }

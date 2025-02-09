@@ -14,10 +14,7 @@ import java.util.List;
 @Builder
 public class PropertyDTO {
     private Long id;
-
     private String address;
-
     private Double rentAmount;
-
     private List<TenantDTO> tenants;
 }

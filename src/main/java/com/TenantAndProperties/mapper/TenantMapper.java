@@ -24,7 +24,6 @@ public class TenantMapper {
                     .build();
             tenant.setProperty(property);
         }
-
         return tenant;
     }
 

@@ -23,14 +23,11 @@ public class PropertyMapper {
 
         if (propertyDTO.getTenants() != null) {
             property.setTenants(propertyDTO.getTenants().stream()
-                    .map(tenantDTO -> {
-                        Tenant tenant = Tenant.builder()
-                                .id(tenantDTO.getId())
-                                .name(tenantDTO.getName())
-                                .property(property)
-                                .build();
-                        return tenant;
-                    })
+                    .map(tenantDTO -> Tenant.builder()
+                            .id(tenantDTO.getId())
+                            .name(tenantDTO.getName())
+                            .property(property)
+                            .build())
                     .collect(Collectors.toList()));
         }
         return property;
