@@ -1,6 +1,6 @@
 package com.TenantAndProperties.service.impl;
 
-import com.TenantAndProperties.TenantNotFoundException;
+import com.TenantAndProperties.Exceptions.TenantOrPropertyNotFoundException;
 import com.TenantAndProperties.dto.PropertyDTO;
 import com.TenantAndProperties.dto.TenantDTO;
 import com.TenantAndProperties.mapper.PropertyMapper;
@@ -12,7 +12,7 @@ import com.TenantAndProperties.repository.TenantRepository;
 import com.TenantAndProperties.service.TenantAndPropertyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +27,11 @@ public class TenantAndPropertyServiceImpl implements TenantAndPropertyService {
     private final PropertyMapper propertyMapper;
     private final TenantMapper tenantMapper;
 
+    @Value("${error.propertyNotFound}")
+    private String propertyNotFoundMessage;
+    @Value("${error.tenantNotFound}")
+    private String tenantNotFoundMessage;
+
 
     @Override
     public PropertyDTO addProperty(final PropertyDTO propertyDTO) {
@@ -35,18 +40,16 @@ public class TenantAndPropertyServiceImpl implements TenantAndPropertyService {
     }
 
     @Override
-    public TenantDTO addTenant(Long propertyId, TenantDTO tenantDTO) {
+    public TenantDTO addTenant(final Long propertyId, TenantDTO tenantDTO) {
         Optional<Property> propertyOptional = propertyRepository.findById(propertyId);
-        if (propertyOptional.isPresent()){
+        if (propertyOptional.isPresent()) {
             Property property = propertyOptional.get();
-
-            Tenant tenant = tenantMapper.tenantDtoToTenant(tenantDTO);;
+            Tenant tenant = tenantMapper.tenantDtoToTenant(tenantDTO);
             tenant.setProperty(property);
             tenant = tenantRepository.save(tenant);
             return tenantMapper.tenantToTenantDto(tenant);
         }
-        return null;
-//        throw new ResourceNotFoundException("Property not found with id: " + propertyId);
+        throw new TenantOrPropertyNotFoundException(propertyNotFoundMessage);
     }
 
     @Override
@@ -67,20 +70,46 @@ public class TenantAndPropertyServiceImpl implements TenantAndPropertyService {
     }
 
     @Override
-    public void deleteTenant(Long id) {
+    public void deleteTenant(final Long id) {
         if (!tenantRepository.existsById(id))
-            throw new TenantNotFoundException("Tenant was not found!");
+            throw new TenantOrPropertyNotFoundException(tenantNotFoundMessage);
         tenantRepository.deleteById(id);
     }
 
     @Override
-    public void deleteProperty(Long id) {
-        try {
-            propertyRepository.deleteById(id);
-        } catch (final EmptyResultDataAccessException emptyResultDataAccessException) {
-            log.debug("Attempted non-existing property", emptyResultDataAccessException);
+    public void deleteProperty(final Long id) {
+        if (!propertyRepository.existsById(id)) {
+            throw new TenantOrPropertyNotFoundException(propertyNotFoundMessage);
         }
+        propertyRepository.deleteById(id);
     }
 
+    @Override
+    public PropertyDTO updateProperty(final PropertyDTO propertyDTO,final Long id) {
+        Property property = propertyRepository.findById(id)
+                .orElseThrow(()->new TenantOrPropertyNotFoundException(propertyNotFoundMessage));
+
+        if (propertyDTO.getAddress()!=null){
+            property.setAddress(propertyDTO.getAddress());
+        }
+        if(propertyDTO.getRentAmount()!=null){
+            property.setRentAmount(propertyDTO.getRentAmount());
+        }
+
+        property = propertyRepository.save(property);
+        return propertyMapper.propertyToPropertyDto(property);
+    }
+
+    @Override
+    public TenantDTO updateTenant(final TenantDTO tenantDTO,final Long id) {
+        Tenant tenant = tenantRepository.findById(id)
+                .orElseThrow(()-> new TenantOrPropertyNotFoundException(tenantNotFoundMessage));
+
+        if (tenantDTO.getName() != null) {
+            tenant.setName(tenantDTO.getName());
+        }
+
+        return tenantMapper.tenantToTenantDto(tenant);
+    }
 
 }

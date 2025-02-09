@@ -1,6 +1,7 @@
 package com.TenantAndProperties.dto;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class TenantDTO {
     private Long id;
-    @NotEmpty
+    @Size(min = 2, message = "Name must be longer than 2 symbols!")
     private String name;
     private PropertyDTO property;
 }

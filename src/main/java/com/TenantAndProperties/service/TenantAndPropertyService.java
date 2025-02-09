@@ -2,6 +2,7 @@ package com.TenantAndProperties.service;
 
 import com.TenantAndProperties.dto.PropertyDTO;
 import com.TenantAndProperties.dto.TenantDTO;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -20,4 +21,8 @@ public interface TenantAndPropertyService {
     void deleteTenant(Long id);
 
     void deleteProperty(Long id);
+
+    PropertyDTO updateProperty(PropertyDTO propertyDTO, Long id);
+
+    TenantDTO updateTenant(TenantDTO tenantDTO, Long id);
 }
