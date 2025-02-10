@@ -8,6 +8,7 @@ import com.TenantAndProperties.repository.PropertyRepository;
 import com.TenantAndProperties.service.TenantAndPropertyService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -103,9 +104,18 @@ class TenantAndPropertyControllerTest {
     }
 
     @Test
-    void deleteTenant() {
+    @Transactional
+    void deleteTenant() throws Exception {
+        propertyRepository.deleteAll(); // Clear existing data
 
+        PropertyDTO propertyDTO = TestData.testPropertyDTO();
+        PropertyDTO savedProperty = service.addProperty(propertyDTO);
 
+        TenantDTO tenant = TestData.testTenantDTO();
+        Long tenantId = service.addTenant(savedProperty.getId(), tenant).getId();
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/tenant/" + tenantId))
+                .andExpect(status().isOk());
     }
 
     @Test
