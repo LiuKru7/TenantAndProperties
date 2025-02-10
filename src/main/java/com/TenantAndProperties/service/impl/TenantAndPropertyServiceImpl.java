@@ -35,7 +35,7 @@ public class TenantAndPropertyServiceImpl implements TenantAndPropertyService {
 
     @Override
     public PropertyDTO addProperty(final PropertyDTO propertyDTO) {
-        final Property property = propertyRepository.save(propertyMapper.propertyDtoToProperty(propertyDTO));
+        Property property = propertyRepository.save(propertyMapper.propertyDtoToProperty(propertyDTO));
         return propertyMapper.propertyToPropertyDto(property);
     }
 
