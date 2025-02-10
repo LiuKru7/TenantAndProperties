@@ -70,6 +70,4 @@ public class TenantAndPropertyController {
         return new ResponseEntity<>(tenant, HttpStatus.OK);
 
     }
-
-
 }

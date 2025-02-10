@@ -78,7 +78,7 @@ class TenantAndPropertyControllerTest {
 
 
     @Test
-    void getAllProperties() throws Exception {
+    void testGetAllProperties() throws Exception {
         final PropertyDTO propertyDTO = TestData.testPropertyDTO();
         propertyRepository.deleteAll();
         service.addProperty(propertyDTO);
@@ -90,7 +90,7 @@ class TenantAndPropertyControllerTest {
 
 
     @Test
-    void getAllTenants() throws Exception {
+    void testGetAllTenants() throws Exception {
         final PropertyDTO propertyDTO = TestData.testPropertyDTO();
         final TenantDTO tenantDTO = TestData.testTenantDTO();
         final List<TenantDTO> tenantDTOS = List.of(tenantDTO);
@@ -105,7 +105,7 @@ class TenantAndPropertyControllerTest {
 
     @Test
     @Transactional
-    void deleteTenant() throws Exception {
+    void testDeleteTenant() throws Exception {
         propertyRepository.deleteAll(); // Clear existing data
 
         PropertyDTO propertyDTO = TestData.testPropertyDTO();
@@ -119,7 +119,7 @@ class TenantAndPropertyControllerTest {
     }
 
     @Test
-    void deleteProperty() {
+    void testDeleteProperty() {
     }
 
     }

@@ -98,7 +98,7 @@ class TenantAndPropertyServiceImplTest {
     }
 
     @Test
-    void deleteTenant() {
+    void testDeleteTenant() {
         Long id = 1L;
         when(tenantRepository.existsById(id)).thenReturn(true);
         testService.deleteTenant(id);
