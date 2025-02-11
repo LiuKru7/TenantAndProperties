@@ -108,7 +108,7 @@ public class TenantAndPropertyServiceImpl implements TenantAndPropertyService {
         if (tenantDTO.getName() != null) {
             tenant.setName(tenantDTO.getName());
         }
-
+        tenant = tenantRepository.save(tenant);
         return tenantMapper.tenantToTenantDto(tenant);
     }
 
