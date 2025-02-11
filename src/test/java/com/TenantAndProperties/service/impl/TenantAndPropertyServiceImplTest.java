@@ -148,7 +148,9 @@ class TenantAndPropertyServiceImplTest {
         TenantDTO tenantDTO = TestData.testTenantDTO();
 
         when(tenantRepository.findById(id)).thenReturn(Optional.of(tenant));
+        when(tenantRepository.save(tenant)).thenReturn(tenant);
         when(tenantMapper.tenantToTenantDto(tenant)).thenReturn(tenantDTO);
+
 
         TenantDTO result = testService.updateTenant(tenantDTO, id);
         assertEquals(tenantDTO, result);
