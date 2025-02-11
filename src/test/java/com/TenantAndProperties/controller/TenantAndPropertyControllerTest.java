@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
@@ -33,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 class TenantAndPropertyControllerTest {
 
     @Autowired
@@ -61,7 +63,6 @@ class TenantAndPropertyControllerTest {
 
     @Test
     void testAddTenant() throws Exception {
-        propertyRepository.deleteAll();
 
         final PropertyDTO propertyDTO = TestData.testPropertyDTO();
         PropertyDTO savedProperty = service.addProperty(propertyDTO);
@@ -79,8 +80,8 @@ class TenantAndPropertyControllerTest {
 
     @Test
     void testGetAllProperties() throws Exception {
-        final PropertyDTO propertyDTO = TestData.testPropertyDTO();
         propertyRepository.deleteAll();
+        final PropertyDTO propertyDTO = TestData.testPropertyDTO();
         service.addProperty(propertyDTO);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/property"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[0].address").value(propertyDTO.getAddress()))
